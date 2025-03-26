@@ -208,7 +208,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Northwind CSV Dashboard</h1>
+      <h1>Sql  Visualizer  Dashboard</h1>
       <p className="instruction">
         Tip: Click on any table header (with the arrow) to open the filter
         dropdown.

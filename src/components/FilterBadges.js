@@ -1,5 +1,4 @@
 import React from 'react';
-import './FilterBadges.css';
 
 function FilterBadges({ columnFilters, onRemove }) {
   return (

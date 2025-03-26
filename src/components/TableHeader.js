@@ -1,6 +1,5 @@
 import React from 'react';
 import MultiSelectDropdown from './MultiSelectDropdown';
-import './TableHeader.css';
 
 function TableHeader({ col, active, onHeaderClick, arrow, dropdownItems, selectedItems, onToggle, onClose }) {
   return (

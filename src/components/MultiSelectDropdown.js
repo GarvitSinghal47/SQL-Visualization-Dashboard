@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import './MultiSelectDropdown.css';
 
 function MultiSelectDropdown({ items, selectedItems, onToggle, onClose }) {
   const dropdownRef = useRef(null);

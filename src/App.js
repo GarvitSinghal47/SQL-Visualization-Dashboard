@@ -1,12 +1,12 @@
-import React, { useState, useMemo } from 'react';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
-import TableHeader from './components/TableHeader';
-import Pagination from './components/Pagination';
-import FilterBadges from './components/FilterBadges';
-import { useCSVData } from './hooks/useCSVData';
-import { applyColumnFilters, generateQuery } from './utils/filterUtils';
-import './App.css';
+import React, { useState, useMemo } from "react";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import TableHeader from "./components/TableHeader";
+import Pagination from "./components/Pagination";
+import FilterBadges from "./components/FilterBadges";
+import { useCSVData } from "./hooks/useCSVData";
+import { applyColumnFilters, generateQuery } from "./utils/filterUtils";
+import "./App.css";
 
 function App() {
   const [selectedTable, setSelectedTable] = useState("categories");
@@ -35,7 +35,8 @@ function App() {
         (col) => uniqueValues[col].length > 1
       );
       if (candidateHeaders.length === 0) break;
-      const randomCol = candidateHeaders[Math.floor(Math.random() * candidateHeaders.length)];
+      const randomCol =
+        candidateHeaders[Math.floor(Math.random() * candidateHeaders.length)];
       const values = uniqueValues[randomCol];
       const randomValue = values[Math.floor(Math.random() * values.length)];
       const sampleQuery = `SELECT * FROM ${selectedTable} WHERE ${randomCol} = '${randomValue}';`;
@@ -58,7 +59,9 @@ function App() {
   }, [csvData]);
 
   const filteredData = useMemo(() => {
-    return mode === "filter" ? applyColumnFilters(csvData, columnFilters) : csvData;
+    return mode === "filter"
+      ? applyColumnFilters(csvData, columnFilters)
+      : csvData;
   }, [csvData, columnFilters, mode]);
 
   const queryText = useMemo(() => {
@@ -74,23 +77,23 @@ function App() {
   }, [filteredData, currentPage, pageSize]);
 
   const handleHeaderClick = (col) => {
-    setActiveFilterColumn(prev => (prev === col ? "" : col));
+    setActiveFilterColumn((prev) => (prev === col ? "" : col));
   };
 
   const handleDropdownToggle = (col, value) => {
-    setColumnFilters(prev => {
+    setColumnFilters((prev) => {
       const current = prev[col] || [];
       let updated = current.includes(value)
-        ? current.filter(v => v !== value)
+        ? current.filter((v) => v !== value)
         : [...current, value];
       return { ...prev, [col]: updated };
     });
   };
 
   const removeFilterBadge = (col, value) => {
-    setColumnFilters(prev => {
+    setColumnFilters((prev) => {
       const current = prev[col] || [];
-      return { ...prev, [col]: current.filter(v => v !== value) };
+      return { ...prev, [col]: current.filter((v) => v !== value) };
     });
   };
 
@@ -102,7 +105,7 @@ function App() {
   const handleSampleQueryChange = (e) => {
     const sampleId = e.target.value;
     setSelectedSampleQuery(sampleId);
-    const sample = sampleQueries.find(s => s.id === sampleId);
+    const sample = sampleQueries.find((s) => s.id === sampleId);
     if (sample) {
       setSampleQueryText(sample.query);
     }
@@ -110,7 +113,11 @@ function App() {
 
   const validateQuery = (query) => {
     if (!query.trim()) return "Query cannot be empty.";
-    if (!/^SELECT\s+\*\s+FROM\s+\w+\s+WHERE\s+\w+\s*=\s*'[^']+';?$/i.test(query.trim())) {
+    if (
+      !/^SELECT\s+\*\s+FROM\s+\w+\s+WHERE\s+\w+\s*=\s*'[^']+';?$/i.test(
+        query.trim()
+      )
+    ) {
       return "Invalid query format. Expected: SELECT * FROM table WHERE column = 'value';";
     }
     return "";
@@ -131,7 +138,8 @@ function App() {
           return;
         }
         // For simplicity, we'll parse the sample query (expects format: SELECT * FROM table WHERE col = 'value';)
-        const regex = /^SELECT\s+\*\s+FROM\s+(\w+)\s+WHERE\s+(\w+)\s*=\s*'([^']+)'/i;
+        const regex =
+          /^SELECT\s+\*\s+FROM\s+(\w+)\s+WHERE\s+(\w+)\s*=\s*'([^']+)'/i;
         const match = regex.exec(sampleQueryText.trim());
         if (!match) {
           setError("Failed to parse query.");
@@ -142,11 +150,13 @@ function App() {
         const col = match[2];
         const value = match[3];
         if (tableName.toLowerCase() !== selectedTable.toLowerCase()) {
-          setError(`Table name in query (${tableName}) does not match selected table (${selectedTable}).`);
+          setError(
+            `Table name in query (${tableName}) does not match selected table (${selectedTable}).`
+          );
           setLoadingQuery(false);
           return;
         }
-        const filtered = csvData.filter(row => row[col] === value);
+        const filtered = csvData.filter((row) => row[col] === value);
         setResultData(filtered);
         setCurrentPage(1);
       }
@@ -174,8 +184,8 @@ function App() {
     doc.setFontSize(12);
     if (resultData && resultData.length > 0) {
       const headers = Object.keys(resultData[0]);
-      const data = resultData.map(row =>
-        headers.map(header => (row[header] ? row[header].toString() : ""))
+      const data = resultData.map((row) =>
+        headers.map((header) => (row[header] ? row[header].toString() : ""))
       );
       autoTable(doc, {
         head: [headers],
@@ -183,7 +193,7 @@ function App() {
         startY: 60,
         theme: "striped",
         headStyles: { fillColor: [22, 160, 133] },
-        styles: { font: "helvetica", fontSize: 10 }
+        styles: { font: "helvetica", fontSize: 10 },
       });
     } else {
       doc.text("No data available.", 40, 60);
@@ -191,20 +201,36 @@ function App() {
     doc.save(`${selectedTable}_results.pdf`);
   };
 
-  const goToPreviousPage = () => setCurrentPage(prev => Math.max(prev - 1, 1));
-  const goToNextPage = () => setCurrentPage(prev => Math.min(prev + 1, totalPages));
+  const goToPreviousPage = () =>
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  const goToNextPage = () =>
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
 
   return (
     <div className="App">
       <h1>Northwind CSV Dashboard</h1>
-      <p className="instruction">Tip: Click on any table header (with the arrow) to open the filter dropdown.</p>
+      <p className="instruction">
+        Tip: Click on any table header (with the arrow) to open the filter
+        dropdown.
+      </p>
       <div className="top-dashboard">
         <div className="table-selection">
           <label>
             Select Table:{" "}
-            <select value={selectedTable} onChange={e => setSelectedTable(e.target.value)}>
-              {["categories", "customers", "employees", "orders", "products"].map(table => (
-                <option key={table} value={table}>{table}</option>
+            <select
+              value={selectedTable}
+              onChange={(e) => setSelectedTable(e.target.value)}
+            >
+              {[
+                "categories",
+                "customers",
+                "employees",
+                "orders",
+                "products",
+              ].map((table) => (
+                <option key={table} value={table}>
+                  {table}
+                </option>
               ))}
             </select>
           </label>
@@ -213,10 +239,22 @@ function App() {
       <hr />
       <div className="mode-selection">
         <label>
-          <input type="radio" value="filter" checked={mode==="filter"} onChange={handleModeChange} /> Filter Mode
+          <input
+            type="radio"
+            value="filter"
+            checked={mode === "filter"}
+            onChange={handleModeChange}
+          />{" "}
+          Filter Mode
         </label>
         <label>
-          <input type="radio" value="sample" checked={mode==="sample"} onChange={handleModeChange} /> Sample Query Mode
+          <input
+            type="radio"
+            value="sample"
+            checked={mode === "sample"}
+            onChange={handleModeChange}
+          />{" "}
+          Sample Query Mode
         </label>
       </div>
       {mode === "sample" && (
@@ -224,13 +262,22 @@ function App() {
           <h2>Sample Queries</h2>
           <label>
             Choose a Sample Query:{" "}
-            <select value={selectedSampleQuery} onChange={handleSampleQueryChange}>
-              {sampleQueries.map(sample => (
-                <option key={sample.id} value={sample.id}>{sample.query}</option>
+            <select
+              value={selectedSampleQuery}
+              onChange={handleSampleQueryChange}
+            >
+              {sampleQueries.map((sample) => (
+                <option key={sample.id} value={sample.id}>
+                  {sample.query}
+                </option>
               ))}
             </select>
           </label>
-          <textarea rows="3" value={sampleQueryText} onChange={e => setSampleQueryText(e.target.value)} />
+          <textarea
+            rows="3"
+            value={sampleQueryText}
+            onChange={(e) => setSampleQueryText(e.target.value)}
+          />
         </div>
       )}
       <div className="query-area">
@@ -243,11 +290,16 @@ function App() {
         <button onClick={runQuery} disabled={loadingCSV || loadingQuery}>
           {loadingQuery ? "Running Query..." : "Run Query"}
         </button>
-        <button onClick={resetFilters} disabled={loadingCSV || loadingQuery}>Reset</button>
+        <button onClick={resetFilters} disabled={loadingCSV || loadingQuery}>
+          Reset
+        </button>
         {error && <p className="error">{error}</p>}
       </div>
       {mode === "filter" && (
-        <FilterBadges columnFilters={columnFilters} onRemove={removeFilterBadge} />
+        <FilterBadges
+          columnFilters={columnFilters}
+          onRemove={removeFilterBadge}
+        />
       )}
       <div className="result-area">
         <h2>Query Results</h2>
@@ -260,19 +312,20 @@ function App() {
             <table>
               <thead>
                 <tr>
-                  {csvData.length > 0 && Object.keys(csvData[0]).map((col, index) => (
-                    <TableHeader
-                      key={index}
-                      col={col}
-                      active={activeFilterColumn === col}
-                      onHeaderClick={handleHeaderClick}
-                      arrow={activeFilterColumn === col ? "▲" : "▼"}
-                      dropdownItems={uniqueValues[col] || []}
-                      selectedItems={columnFilters[col] || []}
-                      onToggle={(val) => handleDropdownToggle(col, val)}
-                      onClose={() => setActiveFilterColumn("")}
-                    />
-                  ))}
+                  {csvData.length > 0 &&
+                    Object.keys(csvData[0]).map((col, index) => (
+                      <TableHeader
+                        key={index}
+                        col={col}
+                        active={activeFilterColumn === col}
+                        onHeaderClick={handleHeaderClick}
+                        arrow={activeFilterColumn === col ? "▲" : "▼"}
+                        dropdownItems={uniqueValues[col] || []}
+                        selectedItems={columnFilters[col] || []}
+                        onToggle={(val) => handleDropdownToggle(col, val)}
+                        onClose={() => setActiveFilterColumn("")}
+                      />
+                    ))}
                 </tr>
               </thead>
               <tbody>

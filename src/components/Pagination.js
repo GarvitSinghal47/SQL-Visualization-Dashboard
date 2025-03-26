@@ -1,5 +1,4 @@
 import React from 'react';
-import './Pagination.css';
 
 function Pagination({ currentPage, totalPages, onPrevious, onNext, pageSize, onPageSizeChange }) {
   return (

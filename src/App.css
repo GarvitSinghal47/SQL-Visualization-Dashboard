@@ -72,11 +72,11 @@ body {
   background: #fafafa;
 }
 
-.sample-select {
-  width: 100%;
+.sample-select option {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 /* Query Area */
@@ -175,16 +175,25 @@ th {
   position: absolute;
   top: 100%;
   right: 0;
-  max-width: calc(100vw - 20px); /* Prevent exceeding viewport */
+  left: auto; /* Ensure dropdown is aligned to the right edge */
+  max-width: 90vw;  /* Limit dropdown width to 90% of viewport */
   background: #fff;
   border: 1px solid #ccc;
   border-top: none;
   max-height: 150px;
   overflow-y: auto;
-  overflow-x: auto; /* Allow horizontal scroll if needed */
+  overflow-x: hidden; /* Hide horizontal overflow */
   z-index: 100;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  white-space: normal; /* Allow text to wrap */
+  word-break: break-word; /* Break long words if needed */
 }
+
+.dropdown-item {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
 
 .dropdown-item {
   white-space: nowrap;

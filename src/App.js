@@ -266,22 +266,22 @@ function App() {
               className="sample-select"
               value={selectedSampleQuery}
               onChange={handleSampleQueryChange}
-              title={
-                sampleQueries.find((s) => s.id === selectedSampleQuery)
-                  ?.query || ""
-              }
             >
               {sampleQueries.map((sample) => (
-                <option key={sample.id} value={sample.id}>
-                  {sample.query}
+                <option key={sample.id} value={sample.id} title={sample.query}>
+                  {sample.query.length > 100
+                    ? sample.query.slice(0, 100) + "..."
+                    : sample.query}
                 </option>
               ))}
             </select>
           </label>
           <textarea
-            rows="3"
+            rows={4}
             value={sampleQueryText}
             onChange={(e) => setSampleQueryText(e.target.value)}
+            style={{ width: "100%", marginTop: "8px" }}
+            placeholder="Full query shown here..."
           />
         </div>
       )}

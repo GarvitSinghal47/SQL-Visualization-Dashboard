@@ -12,13 +12,13 @@ export function applyColumnFilters(data, columnFilters) {
 export function generateQuery(selectedTable, uniqueValues, columnFilters) {
   let query = `SELECT * FROM ${selectedTable}`;
   const conditions = [];
-  Object.keys(uniqueValues).forEach((col) => {
+  Object.keys(uniqueValues).forEach(col => {
     const selectedVals = columnFilters[col] || [];
     if (selectedVals.length > 0) {
       if (selectedVals.length === 1) {
         conditions.push(`${col} = '${selectedVals[0]}'`);
       } else {
-        const vals = selectedVals.map((v) => `'${v}'`).join(", ");
+        const vals = selectedVals.map(v => `'${v}'`).join(", ");
         conditions.push(`${col} IN (${vals})`);
       }
     }

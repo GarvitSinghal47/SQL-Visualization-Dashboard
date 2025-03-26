@@ -1,18 +1,17 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from 'react';
+import './MultiSelectDropdown.css';
 
 function MultiSelectDropdown({ items, selectedItems, onToggle, onClose }) {
   const dropdownRef = useRef(null);
-
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         onClose();
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [onClose]);
-
   return (
     <div className="dropdown" ref={dropdownRef}>
       {items.map((item, idx) => {
@@ -26,12 +25,7 @@ function MultiSelectDropdown({ items, selectedItems, onToggle, onClose }) {
               onToggle(item);
             }}
           >
-            <input
-              type="checkbox"
-              readOnly
-              checked={isSelected}
-              style={{ marginRight: "8px" }}
-            />
+            <input type="checkbox" readOnly checked={isSelected} style={{ marginRight: '8px' }} />
             {item}
           </div>
         );

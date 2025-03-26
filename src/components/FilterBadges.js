@@ -1,15 +1,13 @@
-import React from "react";
+import React from 'react';
+import './FilterBadges.css';
 
 function FilterBadges({ columnFilters, onRemove }) {
   return (
     <div className="filter-badges">
-      {Object.keys(columnFilters).map((col) =>
+      {Object.keys(columnFilters).map(col =>
         (columnFilters[col] || []).map((val, idx) => (
           <span key={`${col}-${idx}`} className="badge">
-            {col}: {val}{" "}
-            <span className="badge-remove" onClick={() => onRemove(col, val)}>
-              ×
-            </span>
+            {col}: {val} <span className="badge-remove" onClick={() => onRemove(col, val)}>×</span>
           </span>
         ))
       )}

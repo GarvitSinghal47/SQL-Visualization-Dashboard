@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from "react";
-import Papa from "papaparse";
+import { useState, useEffect, useMemo } from 'react';
+import Papa from 'papaparse';
 
 export function useCSVData(selectedTable) {
   const [csvData, setCsvData] = useState([]);
@@ -25,8 +25,8 @@ export function useCSVData(selectedTable) {
     const result = {};
     if (csvData.length > 0) {
       const headers = Object.keys(csvData[0]);
-      headers.forEach((header) => {
-        result[header] = [...new Set(csvData.map((row) => row[header]))];
+      headers.forEach(header => {
+        result[header] = [...new Set(csvData.map(row => row[header]))];
       });
     }
     return result;

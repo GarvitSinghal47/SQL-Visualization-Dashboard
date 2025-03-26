@@ -1,38 +1,223 @@
+/* Base Styles */
+body {
+  background: #f7f7f7;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
 .App {
-  text-align: center;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Instruction Note */
+.instruction {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 10px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Top Dashboard */
+.top-dashboard {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
+  margin-bottom: 20px;
+}
+
+.top-dashboard label {
+  font-size: 16px;
+}
+
+.top-dashboard select {
+  margin-left: 10px;
+  padding: 5px;
+  font-size: 14px;
+}
+
+/* Mode Selection */
+.mode-selection {
+  margin-bottom: 20px;
+}
+
+.mode-selection label {
+  margin-right: 20px;
+  font-size: 16px;
+}
+
+/* Generated Query */
+.generated-query {
+  margin-bottom: 10px;
+}
+
+.generated-query input {
+  width: 100%;
+  padding: 5px;
+  font-family: monospace;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Sample Query */
+.sample-query {
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  background: #fafafa;
+}
+
+/* Query Area */
+.query-area {
+  margin-bottom: 20px;
+}
+
+textarea {
+  width: 100%;
+  padding: 8px;
+  font-family: monospace;
+  font-size: 14px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Buttons */
+button {
+  background: #3498db;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 8px 16px;
+  margin-top: 10px;
+  margin-right: 10px;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #2980b9;
+}
+
+/* Filter Badges */
+.filter-badges {
+  margin-bottom: 10px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  background: #2ecc71;
+  color: #fff;
+  border-radius: 16px;
+  padding: 4px 8px;
+  margin: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.badge-remove {
+  font-size: 10px;
+  line-height: 1;
+  cursor: pointer;
+  margin-left: 4px;
+  padding: 0;
+  color: #fff;
+}
+
+/* Table Container */
+.table-container {
+  overflow-x: auto;
+  margin-bottom: 10px;
+}
+
+/* Table Styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  margin-top: 10px;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+  width: 150px;
+  word-wrap: break-word;
+}
+
+/* Header & Dropdown */
+th {
+  cursor: pointer;
+  position: relative;
+}
+
+.header-arrow {
+  margin-left: 4px;
+  font-size: 10px;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.dropdown-item {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background: #f0f0f0;
+}
+
+.dropdown-close {
+  padding: 5px 10px;
+  text-align: right;
+  background: #eee;
+  cursor: pointer;
+  border-top: 1px solid #ccc;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+  margin: 10px 0;
 }
 
-.App-link {
-  color: #61dafb;
+.pagination button {
+  padding: 6px 12px;
+  font-size: 14px;
+  margin: 0 5px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.pagination span {
+  font-size: 14px;
+}
+
+.page-size {
+  margin-left: 10px;
+}
+
+/* Error Message */
+.error {
+  color: red;
 }

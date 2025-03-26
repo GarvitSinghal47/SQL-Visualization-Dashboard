@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import TableHeader from "./components/TableHeader";
@@ -12,7 +12,7 @@ function App() {
   const [selectedTable, setSelectedTable] = useState("categories");
   const { csvData, loadingCSV, uniqueValues } = useCSVData(selectedTable);
 
-  const [mode, setMode] = useState("filter"); // "filter" or "sample"
+  const [mode, setMode] = useState("filter");
   const [columnFilters, setColumnFilters] = useState({});
   const [activeFilterColumn, setActiveFilterColumn] = useState("");
   const [error, setError] = useState("");
@@ -21,11 +21,9 @@ function App() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
-  // Sample query mode state:
   const [selectedSampleQuery, setSelectedSampleQuery] = useState("");
   const [sampleQueryText, setSampleQueryText] = useState("");
 
-  // Generate sample queries based on CSV data.
   const sampleQueries = useMemo(() => {
     const samples = [];
     if (!csvData || csvData.length === 0) return samples;
@@ -45,19 +43,18 @@ function App() {
     return samples;
   }, [selectedTable, uniqueValues, csvData]);
 
-  // When switching to sample mode, initialize sample query.
-  React.useEffect(() => {
+  useEffect(() => {
     if (mode === "sample" && sampleQueries.length > 0) {
       setSelectedSampleQuery(sampleQueries[0].id);
       setSampleQueryText(sampleQueries[0].query);
     }
   }, [mode, sampleQueries]);
 
-  // Update resultData when CSV data changes.
-  React.useEffect(() => {
+  useEffect(() => {
     setResultData(csvData);
   }, [csvData]);
 
+  // eslint-disable-next-line no-unused-vars
   const filteredData = useMemo(() => {
     return mode === "filter"
       ? applyColumnFilters(csvData, columnFilters)
@@ -70,11 +67,11 @@ function App() {
       : sampleQueryText;
   }, [selectedTable, uniqueValues, columnFilters, sampleQueryText, mode]);
 
-  const totalPages = Math.ceil(filteredData.length / pageSize);
+  const totalPages = Math.ceil(resultData.length / pageSize);
   const paginatedData = useMemo(() => {
     const start = (currentPage - 1) * pageSize;
-    return filteredData.slice(start, start + pageSize);
-  }, [filteredData, currentPage, pageSize]);
+    return resultData.slice(start, start + pageSize);
+  }, [resultData, currentPage, pageSize]);
 
   const handleHeaderClick = (col) => {
     setActiveFilterColumn((prev) => (prev === col ? "" : col));
@@ -126,10 +123,11 @@ function App() {
   const runQuery = () => {
     setError("");
     setLoadingQuery(true);
+
     setTimeout(() => {
       if (mode === "filter") {
-        setResultData(filteredData);
-        setCurrentPage(1);
+        const filtered = applyColumnFilters(csvData, columnFilters);
+        setResultData(filtered);
       } else if (mode === "sample") {
         const validationError = validateQuery(sampleQueryText);
         if (validationError) {
@@ -137,7 +135,7 @@ function App() {
           setLoadingQuery(false);
           return;
         }
-        // For simplicity, we'll parse the sample query (expects format: SELECT * FROM table WHERE col = 'value';)
+
         const regex =
           /^SELECT\s+\*\s+FROM\s+(\w+)\s+WHERE\s+(\w+)\s*=\s*'([^']+)'/i;
         const match = regex.exec(sampleQueryText.trim());
@@ -146,9 +144,11 @@ function App() {
           setLoadingQuery(false);
           return;
         }
+
         const tableName = match[1];
         const col = match[2];
         const value = match[3];
+
         if (tableName.toLowerCase() !== selectedTable.toLowerCase()) {
           setError(
             `Table name in query (${tableName}) does not match selected table (${selectedTable}).`
@@ -156,12 +156,13 @@ function App() {
           setLoadingQuery(false);
           return;
         }
+
         const filtered = csvData.filter((row) => row[col] === value);
         setResultData(filtered);
-        setCurrentPage(1);
       }
+      setCurrentPage(1);
       setLoadingQuery(false);
-    }, 1000);
+    }, 500);
   };
 
   const resetFilters = () => {
@@ -208,35 +209,30 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Sql  Visualizer  Dashboard</h1>
+      <h1>Northwind CSV Dashboard</h1>
       <p className="instruction">
         Tip: Click on any table header (with the arrow) to open the filter
         dropdown.
       </p>
+
       <div className="top-dashboard">
-        <div className="table-selection">
-          <label>
-            Select Table:{" "}
-            <select
-              value={selectedTable}
-              onChange={(e) => setSelectedTable(e.target.value)}
-            >
-              {[
-                "categories",
-                "customers",
-                "employees",
-                "orders",
-                "products",
-              ].map((table) => (
+        <label>
+          Select Table:
+          <select
+            value={selectedTable}
+            onChange={(e) => setSelectedTable(e.target.value)}
+          >
+            {["categories", "customers", "employees", "orders", "products"].map(
+              (table) => (
                 <option key={table} value={table}>
                   {table}
                 </option>
-              ))}
-            </select>
-          </label>
-        </div>
+              )
+            )}
+          </select>
+        </label>
       </div>
-      <hr />
+
       <div className="mode-selection">
         <label>
           <input
@@ -257,15 +253,15 @@ function App() {
           Sample Query Mode
         </label>
       </div>
+
       {mode === "sample" && (
         <div className="sample-query">
-          <h2>Sample Queries</h2>
           <label>
-            Choose a Sample Query:{" "}
+            Choose Sample Query:
             <select
-              className="sample-select"
               value={selectedSampleQuery}
               onChange={handleSampleQueryChange}
+              className="sample-select"
             >
               {sampleQueries.map((sample) => (
                 <option key={sample.id} value={sample.id} title={sample.query}>
@@ -277,43 +273,43 @@ function App() {
             </select>
           </label>
           <textarea
-            rows={4}
+            rows="4"
             value={sampleQueryText}
             onChange={(e) => setSampleQueryText(e.target.value)}
             style={{ width: "100%", marginTop: "8px" }}
-            placeholder="Full query shown here..."
+            placeholder="Edit query here..."
           />
         </div>
       )}
+
+      {mode === "filter" && (
+        <div className="generated-query">
+          <h3>Generated Query</h3>
+          <input type="text" readOnly value={queryText} />
+        </div>
+      )}
+
       <div className="query-area">
-        {mode === "filter" && (
-          <div className="generated-query">
-            <h3>Generated Query</h3>
-            <input type="text" readOnly value={queryText} />
-          </div>
-        )}
         <button onClick={runQuery} disabled={loadingCSV || loadingQuery}>
           {loadingQuery ? "Running Query..." : "Run Query"}
         </button>
-        <button onClick={resetFilters} disabled={loadingCSV || loadingQuery}>
-          Reset
-        </button>
+        <button onClick={resetFilters}>Reset</button>
         {error && <p className="error">{error}</p>}
       </div>
+
       {mode === "filter" && (
         <FilterBadges
           columnFilters={columnFilters}
           onRemove={removeFilterBadge}
         />
       )}
+
       <div className="result-area">
         <h2>Query Results</h2>
         <div className="table-container">
           {loadingCSV ? (
             <p>Loading CSV data...</p>
-          ) : loadingQuery ? (
-            <p>Running query...</p>
-          ) : resultData && resultData.length > 0 ? (
+          ) : resultData.length > 0 ? (
             <table>
               <thead>
                 <tr>
@@ -347,6 +343,7 @@ function App() {
             <p>No data to display.</p>
           )}
         </div>
+
         {totalPages > 1 && (
           <Pagination
             currentPage={currentPage}
@@ -360,7 +357,7 @@ function App() {
             }}
           />
         )}
-        <br />
+
         <button onClick={downloadPDF}>Download as PDF</button>
       </div>
     </div>

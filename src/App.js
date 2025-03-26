@@ -12,6 +12,7 @@ function App() {
   const [selectedTable, setSelectedTable] = useState("categories");
   const { csvData, loadingCSV, uniqueValues } = useCSVData(selectedTable);
 
+  // eslint-disable-next-line no-unused-vars
   const [mode, setMode] = useState("filter"); // Only filter mode is implemented here.
   const [columnFilters, setColumnFilters] = useState({});
   const [activeFilterColumn, setActiveFilterColumn] = useState("");

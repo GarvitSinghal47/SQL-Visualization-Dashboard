@@ -72,6 +72,13 @@ body {
   background: #fafafa;
 }
 
+.sample-select {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* Query Area */
 .query-area {
   margin-bottom: 20px;

@@ -263,8 +263,13 @@ function App() {
           <label>
             Choose a Sample Query:{" "}
             <select
+              className="sample-select"
               value={selectedSampleQuery}
               onChange={handleSampleQueryChange}
+              title={
+                sampleQueries.find((s) => s.id === selectedSampleQuery)
+                  ?.query || ""
+              }
             >
               {sampleQueries.map((sample) => (
                 <option key={sample.id} value={sample.id}>

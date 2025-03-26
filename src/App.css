@@ -174,21 +174,23 @@ th {
 .dropdown {
   position: absolute;
   top: 100%;
-  right: 0; 
-  max-width: calc(100vw - 20px);
+  right: 0;
+  max-width: calc(100vw - 20px); /* Prevent exceeding viewport */
   background: #fff;
   border: 1px solid #ccc;
   border-top: none;
   max-height: 150px;
   overflow-y: auto;
+  overflow-x: auto; /* Allow horizontal scroll if needed */
   z-index: 100;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-
 .dropdown-item {
-  padding: 5px 10px;
-  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .dropdown-item:hover {
